@@ -3,8 +3,7 @@
 #include <fstream>
 #include <vector>
 
-#include <GL/glew.h>
-#include <GL/gl.h>
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 #define GLM_FORCE_RADIANS
