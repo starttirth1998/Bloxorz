@@ -1,4 +1,5 @@
 
+
 struct VAO {
     GLuint VertexArrayID;
     GLuint VertexBuffer;
@@ -9,6 +10,17 @@ struct VAO {
     int NumVertices;
 };
 typedef struct VAO VAO;
+
+typedef struct Floor{
+    VAO* floor;
+    int index;
+    float x;
+    float y;
+    float z;
+    float angle;
+}Floor;
+
+Floor FLOOR[105];
 
 struct GLMatrices {
     glm::mat4 projection;
@@ -35,9 +47,11 @@ int do_rot, floor_rel;
 GLuint programID;
 double last_update_time, current_time;
 glm::vec3 rect_pos, floor_pos;
-float rectangle_rotation = 0;
+float rectangle_rotation = 15;
 
 float rectangle_rot_dir = 1;
 bool rectangle_rot_status = true;
 
 VAO *rectangle, *cam, *floor_vao;
+
+float camera_rotation_angle = 0;
