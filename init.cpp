@@ -25,6 +25,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
 	    quit(window);
 	    break;
     case GLFW_KEY_RIGHT:
+        FLAG_LEFT = 0;
         if(BLOCK.horizontal_x == 0)
         {
             if(BLOCK.horizontal_z == 0)
@@ -32,25 +33,26 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
                 BLOCK.z += TILE_WIDTH;
                 BLOCK.horizontal_z = 1;
                 BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (1,0,0);
-                BLOCK.angle = 90;
+                BLOCK.axis = glm::vec3 (BLOCK_WIDTH,0,0);
+                BLOCK.angle_incr = ROTATION_SPEED;
             }
             else
             {
                 BLOCK.z += 5*TILE_WIDTH;
                 BLOCK.horizontal_z = 0;
                 BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,1,0);
-                BLOCK.angle = 0;
+                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
+                //BLOCK.angle_incr = -ROTATION_SPEED;
             }
         }
         else if(BLOCK.horizontal_x == 1)
         {
             BLOCK.z += 2*TILE_WIDTH;
-            //BLOCK.angle += 90;
+            BLOCK.angle_incr = ROTATION_SPEED;
         }
         break;
     case GLFW_KEY_LEFT:
+        FLAG_LEFT = 1;
         if(BLOCK.horizontal_x == 0)
         {
             if(BLOCK.horizontal_z == 0)
@@ -58,16 +60,16 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
                 BLOCK.z -= 5*TILE_WIDTH;
                 BLOCK.horizontal_z = 1;
                 BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (1,0,0);
-                BLOCK.angle = 90;
+                BLOCK.axis = glm::vec3 (BLOCK_WIDTH,0,0);
+                BLOCK.angle_incr = ROTATION_SPEED;
             }
             else
             {
                 BLOCK.z -= TILE_WIDTH;
                 BLOCK.horizontal_z = 0;
                 BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,1,0);
-                BLOCK.angle = 0;
+                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
+                //BLOCK.angle_incr = -ROTATION_SPEED;
             }
         }
         else if(BLOCK.horizontal_x == 1)
@@ -76,6 +78,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
         }
         break;
     case GLFW_KEY_UP:
+        FLAG_DOWN = 0;
         if(BLOCK.horizontal_z == 0)
         {
             if(BLOCK.horizontal_x == 0)
@@ -83,16 +86,16 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
                 BLOCK.x += 5*TILE_WIDTH;
                 BLOCK.horizontal_x = 1;
                 BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,0,1);
-                BLOCK.angle = 90;
+                BLOCK.axis = glm::vec3 (0,0,BLOCK_WIDTH);
+                BLOCK.angle_incr = ROTATION_SPEED;
             }
             else
             {
                 BLOCK.x += TILE_WIDTH;
                 BLOCK.horizontal_x = 0;
                 BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,1,0);
-                BLOCK.angle = 0;
+                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
+                //BLOCK.angle_incr = -ROTATION_SPEED;
             }
         }
         else if(BLOCK.horizontal_z == 1)
@@ -101,6 +104,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
         }
         break;
     case GLFW_KEY_DOWN:
+        FLAG_DOWN = 1;
         if(BLOCK.horizontal_z == 0)
         {
             if(BLOCK.horizontal_x == 0)
@@ -108,16 +112,16 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
                 BLOCK.x -= TILE_WIDTH;
                 BLOCK.horizontal_x = 1;
                 BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,0,1);
-                BLOCK.angle = 90;
+                BLOCK.axis = glm::vec3 (0,0,BLOCK_WIDTH);
+                BLOCK.angle_incr = ROTATION_SPEED;
             }
             else
             {
                 BLOCK.x -= 5*TILE_WIDTH;
                 BLOCK.horizontal_x = 0;
                 BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,1,0);
-                BLOCK.angle = 0;
+                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
+                //BLOCK.angle_incr = -ROTATION_SPEED;
             }
         }
         else if(BLOCK.horizontal_z == 1)
@@ -139,51 +143,28 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     case 'q':
 	quit(window);
 	break;
-    case 'a':
-	rect_pos.x -= 0.1;
-	break;
-    case 'd':
-	rect_pos.x += 0.1;
-	break;
-    case 'w':
-	rect_pos.y += 0.1;
-	break;
-    case 's':
-	rect_pos.y -= 0.1;
-	break;
-    case 'r':
-	rect_pos.z -= 0.1;
-	break;
+    case 'b':
+    BLOCK_VIEW_FLAG = 1;
+    FOLLOW_VIEW_FLAG = 0;
+    break;
     case 'f':
-	rect_pos.z += 0.1;
+	FOLLOW_VIEW_FLAG = 1;
+    BLOCK_VIEW_FLAG = 0;
 	break;
-    case 'e':
-	rectangle_rotation += 1;
-	break;
-    case 'j':
-	floor_pos.x -= 0.1;
-	break;
-    case 'l':
-	floor_pos.x += 0.1;
-	break;
-    case 'i':
-	floor_pos.y += 0.1;
-	break;
-    case 'k':
-	floor_pos.y -= 0.1;
-	break;
-    case 'y':
-	floor_pos.z -= 0.1;
-	break;
-    case 'h':
-	floor_pos.z += 0.1;
-	break;
-    case 'g':
-	floor_rel ^= 1;
-	break;
-    case ' ':
-	do_rot ^= 1;
-	break;
+    case 't':
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye = TOWER_VIEW_EYE;
+    target = TOWER_VIEW_TARGET;
+    up = TOWER_VIEW_UP;
+    break;
+    case 'v':
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye = TOP_VIEW_EYE;
+    target = TOP_VIEW_TARGET;
+    up = TOP_VIEW_UP;
+    break;
     default:
 	break;
     }

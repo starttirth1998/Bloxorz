@@ -28,6 +28,7 @@ typedef struct Block{
     float y;
     float z;
     float angle;
+    float angle_incr;
     int horizontal_z;
     int horizontal_x;
     glm::vec3 axis;
@@ -72,3 +73,23 @@ float TILE_WIDTH = 1.0;
 float TILE_HEIGHT = 2.0;
 float BLOCK_WIDTH = TILE_WIDTH;
 float BLOCK_HEIGHT = 4.0;
+
+glm::vec3 up;
+glm::vec3 target;
+glm::vec3 eye;
+
+glm::vec3 TOWER_VIEW_EYE = glm::vec3(-6, 10, -4); 
+glm::vec3 TOWER_VIEW_TARGET = glm::vec3(0,0,0); 
+glm::vec3 TOWER_VIEW_UP = glm::vec3(1,3,1);
+
+glm::vec3 TOP_VIEW_EYE = glm::vec3(4.5, 15, 4.5); 
+glm::vec3 TOP_VIEW_TARGET = glm::vec3(4.5,0,4.5); 
+glm::vec3 TOP_VIEW_UP = glm::vec3(1,0,1);
+
+int FOLLOW_VIEW_FLAG = 0;
+int BLOCK_VIEW_FLAG = 0;
+int FLAG_LEFT = 0;
+int FLAG_DOWN = 0;
+
+float ROTATION_SPEED = 90.0f;
+

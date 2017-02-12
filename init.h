@@ -24,6 +24,7 @@ typedef struct Block{
     float y;
     float z;
     float angle;
+    float angle_incr;
     int horizontal_x;
     int horizontal_z;
     glm::vec3 axis;
@@ -38,6 +39,8 @@ extern glm::vec3 rect_pos, floor_pos;
 extern float rectangle_rotation;
 extern float TILE_WIDTH;
 extern float BLOCK_HEIGHT;
+extern int FOLLOW_VIEW_FLAG;
+extern int BLOCK_VIEW_FLAG;
 
 void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods);
 void keyboardChar (GLFWwindow* window, unsigned int key);
@@ -57,3 +60,12 @@ void createRectangle();
 void createBlock();
 
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
+
+extern glm::vec3 up,target,eye;
+extern glm::vec3 TOP_VIEW_EYE,TOP_VIEW_TARGET,TOP_VIEW_UP,TOWER_VIEW_EYE,TOWER_VIEW_TARGET,TOWER_VIEW_UP;
+extern int FLAG_DOWN,FLAG_LEFT;
+
+extern float ROTATION_SPEED;
+
+
+extern float BLOCK_WIDTH,BLOCK_HEIGHT;

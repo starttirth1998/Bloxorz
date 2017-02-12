@@ -19,14 +19,6 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     // Don't change unless you know what you are doing
     glUseProgram(programID);
 
-    // Eye - Location of camera. Don't change unless you are sure!!
-    glm::vec3 eye (-6, 3, -4);
-    //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
-
-    // Target - Where is the camera looking at.  Don't change unless you are sure!!
-    glm::vec3 target (0, 0, 0);
-    // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
-    glm::vec3 up (1, 3, 1);
 
     // Compute Camera matrix (view)
     if(doV)
@@ -70,9 +62,18 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
 
     
     glm::mat4 MVP;	// MVP = Projection * View * Model
-
     
-
+    BLOCK.angle += BLOCK.angle_incr;
+    if(BLOCK.angle > 90)
+    {
+        BLOCK.angle = 90;
+        BLOCK.angle_incr = 0;
+    }
+    else if(BLOCK.angle <= 0)
+    {
+        BLOCK.angle = 0;
+        BLOCK.angle_incr = 0;
+    }
     // Load identity to model matrix
     Matrices.model = glm::mat4(1.0f);
 
@@ -120,6 +121,7 @@ int main (int argc, char** argv)
     }
     BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;
     BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
+    BLOCK.angle_incr=0;
     rect_pos = glm::vec3(0, 0, 0);
     floor_pos = glm::vec3(0, 0, 0);
     do_rot = 0;
@@ -127,6 +129,15 @@ int main (int argc, char** argv)
 
     GLFWwindow* window = initGLFW(width, height);
     initGL (window, width, height);
+
+    // Eye - Location of camera. Don't change unless you are sure!!
+    eye = TOWER_VIEW_EYE;
+    //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
+
+    // Target - Where is the camera looking at.  Don't change unless you are sure!!
+    target = TOWER_VIEW_TARGET;
+    // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
+    up = TOWER_VIEW_UP;
 
     last_update_time = glfwGetTime();
     /* Draw in loop */
@@ -142,6 +153,23 @@ int main (int argc, char** argv)
 	if(camera_rotation_angle > 720)
 	    camera_rotation_angle -= 720;
 	last_update_time = current_time;
+
+    if(FOLLOW_VIEW_FLAG || BLOCK_VIEW_FLAG)
+    {
+        eye = glm::vec3(BLOCK.x,BLOCK.y+5,BLOCK.z);
+        if(FOLLOW_VIEW_FLAG)
+            eye = glm::vec3(BLOCK.x-2,BLOCK.y+10,BLOCK.z);
+        //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
+
+        // Target - Where is the camera looking at.  Don't change unless you are sure!!
+        target = glm::vec3(BLOCK.x+2,BLOCK.y+4,BLOCK.z);
+
+        // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
+        up = glm::vec3(0,1,0);
+    
+        up = eye*target;
+    }
+
 	draw(window, 0, 0, 1.0, 1.0, 1, 1, 1);
 	//draw(window, 0.5, 0, 0.5, 0.5, 0, 1, 1);
 	//draw(window, 0, 0.5, 0.5, 0.5, 1, 0, 1);
