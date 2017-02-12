@@ -22,6 +22,19 @@ typedef struct Floor{
 
 Floor FLOOR[105];
 
+typedef struct Block{
+    VAO* block;
+    float x;
+    float y;
+    float z;
+    float angle;
+    int horizontal_z;
+    int horizontal_x;
+    glm::vec3 axis;
+}Block;
+
+Block BLOCK;
+
 struct GLMatrices {
     glm::mat4 projection;
     glm::mat4 model;
@@ -55,3 +68,7 @@ bool rectangle_rot_status = true;
 VAO *rectangle, *cam, *floor_vao;
 
 float camera_rotation_angle = 0;
+float TILE_WIDTH = 1.0;
+float TILE_HEIGHT = 2.0;
+float BLOCK_WIDTH = TILE_WIDTH;
+float BLOCK_HEIGHT = 4.0;

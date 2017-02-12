@@ -20,7 +20,7 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     glUseProgram(programID);
 
     // Eye - Location of camera. Don't change unless you are sure!!
-    glm::vec3 eye (-6, 10, -4);
+    glm::vec3 eye (-6, 3, -4);
     //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
 
     // Target - Where is the camera looking at.  Don't change unless you are sure!!
@@ -76,14 +76,14 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     // Load identity to model matrix
     Matrices.model = glm::mat4(1.0f);
 
-    glm::mat4 translateCam = glm::translate(eye);
-    glm::mat4 rotateCam = glm::rotate((float)((90 - camera_rotation_angle)*M_PI/180.0f), glm::vec3(0,1,0));
-    Matrices.model *= (translateCam * rotateCam);
+    glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+    glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
+    Matrices.model *= (translateBlock * rotateBlock);
     MVP = VP * Matrices.model;
     glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
     // draw3DObject draws the VAO given to it using current MVP matrix
-    draw3DObject(cam);
+    draw3DObject(BLOCK.block);
 
     Matrices.model = glm::translate(floor_pos);
     MVP = VP * Matrices.model;
@@ -118,6 +118,8 @@ int main (int argc, char** argv)
             FLOOR[cur].angle = FLOOR[cur-1].angle;
         }
     }
+    BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;
+    BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
     rect_pos = glm::vec3(0, 0, 0);
     floor_pos = glm::vec3(0, 0, 0);
     do_rot = 0;

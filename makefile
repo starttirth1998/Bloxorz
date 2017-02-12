@@ -3,11 +3,14 @@ OPTS =  -lGL -lglfw -ldl
 
 all: sample2D
 
-sample2D: main.o init.o VAO.o create_object.o
-	g++ -o sample2D main.o init.o VAO.o create_object.o glad.c $(OPTS)
+sample2D: main.o init.o VAO.o create_object.o block.o
+	g++ -o sample2D main.o init.o VAO.o create_object.o block.o glad.c $(OPTS)
 
 main.o: main.cpp header.h main.h
 	g++ -c main.cpp glad.c $(OPTS)
+
+block.o: block.cpp header.h block.h
+	g++ -c block.cpp glad.c $(OPTS)
 
 create_object.o: create_object.cpp header.h create_object.h
 	g++ -c create_object.cpp glad.c $(OPTS)

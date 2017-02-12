@@ -24,6 +24,107 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
 	case GLFW_KEY_ESCAPE:
 	    quit(window);
 	    break;
+    case GLFW_KEY_RIGHT:
+        if(BLOCK.horizontal_x == 0)
+        {
+            if(BLOCK.horizontal_z == 0)
+            {
+                BLOCK.z += TILE_WIDTH;
+                BLOCK.horizontal_z = 1;
+                BLOCK.y += TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (1,0,0);
+                BLOCK.angle = 90;
+            }
+            else
+            {
+                BLOCK.z += 5*TILE_WIDTH;
+                BLOCK.horizontal_z = 0;
+                BLOCK.y -= TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle = 0;
+            }
+        }
+        else if(BLOCK.horizontal_x == 1)
+        {
+            BLOCK.z += 2*TILE_WIDTH;
+            //BLOCK.angle += 90;
+        }
+        break;
+    case GLFW_KEY_LEFT:
+        if(BLOCK.horizontal_x == 0)
+        {
+            if(BLOCK.horizontal_z == 0)
+            {
+                BLOCK.z -= 5*TILE_WIDTH;
+                BLOCK.horizontal_z = 1;
+                BLOCK.y += TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (1,0,0);
+                BLOCK.angle = 90;
+            }
+            else
+            {
+                BLOCK.z -= TILE_WIDTH;
+                BLOCK.horizontal_z = 0;
+                BLOCK.y -= TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle = 0;
+            }
+        }
+        else if(BLOCK.horizontal_x == 1)
+        {
+            BLOCK.z -= 2*TILE_WIDTH;
+        }
+        break;
+    case GLFW_KEY_UP:
+        if(BLOCK.horizontal_z == 0)
+        {
+            if(BLOCK.horizontal_x == 0)
+            {
+                BLOCK.x += 5*TILE_WIDTH;
+                BLOCK.horizontal_x = 1;
+                BLOCK.y += TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,0,1);
+                BLOCK.angle = 90;
+            }
+            else
+            {
+                BLOCK.x += TILE_WIDTH;
+                BLOCK.horizontal_x = 0;
+                BLOCK.y -= TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle = 0;
+            }
+        }
+        else if(BLOCK.horizontal_z == 1)
+        {
+            BLOCK.x += 2*TILE_WIDTH;
+        }
+        break;
+    case GLFW_KEY_DOWN:
+        if(BLOCK.horizontal_z == 0)
+        {
+            if(BLOCK.horizontal_x == 0)
+            {
+                BLOCK.x -= TILE_WIDTH;
+                BLOCK.horizontal_x = 1;
+                BLOCK.y += TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,0,1);
+                BLOCK.angle = 90;
+            }
+            else
+            {
+                BLOCK.x -= 5*TILE_WIDTH;
+                BLOCK.horizontal_x = 0;
+                BLOCK.y -= TILE_WIDTH;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle = 0;
+            }
+        }
+        else if(BLOCK.horizontal_z == 1)
+        {
+            BLOCK.x -= 2*TILE_WIDTH;
+        }
+        break;
 	default:
 	    break;
         }
@@ -179,6 +280,7 @@ void initGL (GLFWwindow* window, int width, int height)
     createRectangle ();
     createCam();
     createFloor();
+    createBlock();
 	
     // Create and compile our GLSL program from the shaders
     programID = LoadShaders( "Sample_GL.vert", "Sample_GL.frag" );

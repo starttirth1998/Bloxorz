@@ -21,13 +21,23 @@ typedef struct Floor{
 
 extern Floor FLOOR[105];
 
+typedef struct Block{
+    VAO* block;
+    float x;
+    float y;
+    float z;
+    float angle;
+    int horizontal_x;
+    int horizontal_z;
+    glm::vec3 axis;
+}Block;
+
+extern Block BLOCK;
+
 struct VAO* create3DObject (GLenum primitive_mode, int numVertices, const GLfloat* vertex_buffer_data, const GLfloat* color_buffer_data, GLenum fill_mode);
 struct VAO* create3DObject (GLenum primitive_mode, int numVertices, const GLfloat* vertex_buffer_data, const GLfloat red, const GLfloat green, const GLfloat blue, GLenum fill_mode);
 
-void createRectangle ();
-void createCam ();
-void createFloor();
+void createBlock ();
 
-extern VAO *rectangle, *cam, *floor_vao;
-extern float TILE_WIDTH;
-extern float TILE_HEIGHT;
+extern float BLOCK_WIDTH;
+extern float BLOCK_HEIGHT;
