@@ -42,7 +42,7 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
 
         // Load identity to model matrix
         Matrices.model = glm::mat4(1.0f);
-        glm::mat4 translateRectangle = glm::translate (glm::vec3(FLOOR[i].x,FLOOR[i].y-2,FLOOR[i].z));
+        glm::mat4 translateRectangle = glm::translate (glm::vec3(FLOOR[i].x,FLOOR[i].y,FLOOR[i].z));
         glm::mat4 rotateRectangle = glm::rotate((float)(FLOOR[i].angle*M_PI/180.0f), glm::vec3(0,0,1));
         Matrices.model *= (translateRectangle * rotateRectangle);
         if(floor_rel)
@@ -64,34 +64,325 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     glm::mat4 MVP;	// MVP = Projection * View * Model
     
     BLOCK.angle += BLOCK.angle_incr;
-    if(BLOCK.angle > 90)
-    {
-        BLOCK.angle = 90;
-        BLOCK.angle_incr = 0;
-    }
-    else if(BLOCK.angle <= 0)
-    {
-        BLOCK.angle = 0;
-        BLOCK.angle_incr = 0;
-    }
+    BLOCK.angle_x += BLOCK.angle_incr_x;
+    
+    
     // Load identity to model matrix
     Matrices.model = glm::mat4(1.0f);
 
-    glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
-    glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
-    Matrices.model *= (translateBlock * rotateBlock);
+    if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+    {
+        //cout << " X: " << BLOCK.x << " Y: " << BLOCK.y << " Z: " << BLOCK.z << endl;
+        glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+        glm::mat4 rotateBlock = glm::rotate((float)((0)*M_PI/180.0f), glm::vec3(1,0,0));
+        Matrices.model *= (translateBlock * rotateBlock);
+    }
+
+    else if(BLOCK.horizontal_x == 1 && BLOCK.horizontal_z == 0)
+    {
+        glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+        glm::mat4 rotateBlock = glm::rotate((float)((90)*M_PI/180.0f), glm::vec3(0,0,1));
+        Matrices.model *= (translateBlock * rotateBlock);
+    }
+
+    else if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 1)
+    {
+        glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+        glm::mat4 rotateBlock = glm::rotate((float)((90)*M_PI/180.0f), glm::vec3(1,0,0));
+        Matrices.model *= (translateBlock * rotateBlock);
+    }
+
     MVP = VP * Matrices.model;
     glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
+
+    if(FLAG_LEFT == -1)
+    {
+        if(BLOCK.horizontal_x == 0)
+        {
+            if(BLOCK.horizontal_z == 0)
+            {       
+                Matrices.model = glm::mat4(1.0f);
+
+                glm::mat4 translateBlockToOrigin = glm::translate(glm::vec3(0,-BLOCK_HEIGHT,BLOCK_WIDTH));
+                glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
+                glm::mat4 translateFromOrigin = glm::translate(glm::vec3(0,BLOCK_HEIGHT,-BLOCK_WIDTH));
+                Matrices.model *= (translateBlockToOrigin * translateBlock *  rotateBlock * translateFromOrigin);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle >= 90)
+                {
+                    BLOCK.angle = 90;
+                    BLOCK.angle_incr = 0;
+                    FLAG_LEFT = 0;
+                    BLOCK.horizontal_z = 1;
+                    BLOCK.y += -BLOCK_WIDTH;
+                    BLOCK.z += BLOCK_HEIGHT + BLOCK_WIDTH;
+                    //BLOCK.axis = glm::vec3(1,0,0);
+                }
+            }
+            else
+            {
+                Matrices.model = glm::mat4(1.0f);
+
+                glm::mat4 translateBlockToOrigin = glm::translate(glm::vec3(BLOCK.x,BLOCK.y-BLOCK_HEIGHT,BLOCK.z+BLOCK_WIDTH));
+                //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock = glm::rotate((float)((90)*M_PI/180.0f), BLOCK.axis);
+                glm::mat4 translateFromOrigin = glm::translate(glm::vec3(0,BLOCK_HEIGHT,-BLOCK_WIDTH));
+                Matrices.model *= (translateBlockToOrigin * rotateBlock);
+
+
+                glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(0,-BLOCK_HEIGHT+BLOCK_WIDTH,-BLOCK_WIDTH));
+                //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock2 = glm::rotate((float)((BLOCK.angle+90)*M_PI/180.0f), BLOCK.axis);
+                glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(0,BLOCK_HEIGHT,BLOCK_WIDTH));
+                Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle >= 180)
+                {
+                    BLOCK.angle = 0;
+                    BLOCK.angle_incr = 0;
+                    FLAG_LEFT = 0;
+                    BLOCK.horizontal_z = 0;
+                    BLOCK.y += BLOCK_HEIGHT-BLOCK_WIDTH;
+                    BLOCK.z += BLOCK_WIDTH;
+                    //BLOCK.axis = glm::vec3(0,1,0);
+                }
+            }
+        }
+        else if(BLOCK.horizontal_x == 1)
+        {
+            glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,0,BLOCK_WIDTH));
+            //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+            glm::mat4 rotateBlock2 = glm::rotate((float)((-BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
+            glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,0,-BLOCK_WIDTH));
+            Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+            MVP = VP * Matrices.model;
+            glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+            if(BLOCK.angle >= 90)
+            {
+                BLOCK.angle = 0;
+                BLOCK.angle_incr = 0;
+                FLAG_LEFT = 0;
+                //BLOCK.horizontal_z = 0;
+                BLOCK.y += 0;
+                BLOCK.z += 2*BLOCK_WIDTH;
+                //BLOCK.axis = glm::vec3(0,1,0);
+            }
+        }
+    }
+
+    else if(FLAG_LEFT == 1)
+    {
+        if(BLOCK.horizontal_x == 0)
+        {
+            if(BLOCK.horizontal_z == 0)
+            {       
+                Matrices.model = glm::mat4(1.0f);
+
+                glm::mat4 translateBlockToOrigin = glm::translate(glm::vec3(0,-BLOCK_HEIGHT,-BLOCK_WIDTH));
+                glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
+                glm::mat4 translateFromOrigin = glm::translate(glm::vec3(0,BLOCK_HEIGHT,BLOCK_WIDTH));
+                Matrices.model *= (translateBlockToOrigin * translateBlock *  rotateBlock * translateFromOrigin);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle <= -90)
+                {
+                    BLOCK.angle = 90;
+                    BLOCK.angle_incr = 0;
+                    FLAG_LEFT = 0;
+                    BLOCK.horizontal_z = 1;
+                    BLOCK.y += -BLOCK_WIDTH;
+                    BLOCK.z += -BLOCK_HEIGHT - BLOCK_WIDTH;
+
+                    //BLOCK.axis = glm::vec3(1,0,0);
+                }
+            }
+            else
+            {
+                glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(0,-BLOCK_HEIGHT,BLOCK_WIDTH));
+                //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock2 = glm::rotate((float)((BLOCK.angle+270)*M_PI/180.0f), BLOCK.axis);
+                glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(0,BLOCK_HEIGHT,-BLOCK_WIDTH));
+                Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle <= 0)
+                {
+                    BLOCK.angle = 0;
+                    BLOCK.angle_incr = 0;
+                    FLAG_LEFT = 0;
+                    BLOCK.horizontal_z = 0;
+                    BLOCK.y += BLOCK_WIDTH;
+                    BLOCK.z += -BLOCK_HEIGHT-BLOCK_WIDTH;
+                    //BLOCK.axis = glm::vec3(0,1,0);
+                }
+            }
+        }
+        else if(BLOCK.horizontal_x == 1)
+        {
+            glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,0,-BLOCK_WIDTH));
+            //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+            glm::mat4 rotateBlock2 = glm::rotate((float)((BLOCK.angle)*M_PI/180.0f), BLOCK.axis);
+            glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,0,BLOCK_WIDTH));
+            Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+            MVP = VP * Matrices.model;
+            glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+            if(BLOCK.angle >= 90)
+            {
+                BLOCK.angle = 0;
+                BLOCK.angle_incr = 0;
+                FLAG_LEFT = 0;
+                //BLOCK.horizontal_z = 0;
+                BLOCK.y += 0;
+                BLOCK.z += -2*BLOCK_WIDTH;
+                //BLOCK.axis = glm::vec3(0,1,0);
+            }
+        }
+    }
+
+    else if(FLAG_DOWN == -1)
+    {
+        if(BLOCK.horizontal_z == 0)
+        {
+            if(BLOCK.horizontal_x == 0)
+            {  
+                Matrices.model = glm::mat4(1.0f);
+
+                glm::mat4 translateBlockToOrigin = glm::translate(glm::vec3(BLOCK_WIDTH,-BLOCK_HEIGHT,0));
+                glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle_x)*M_PI/180.0f), BLOCK.axis_x);
+                glm::mat4 translateFromOrigin = glm::translate(glm::vec3(-BLOCK_WIDTH,BLOCK_HEIGHT,0));
+                Matrices.model *= (translateBlockToOrigin * translateBlock *  rotateBlock * translateFromOrigin);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle_x <= -90)
+                {
+                    BLOCK.angle_x = 90;
+                    BLOCK.angle_incr_x = 0;
+                    FLAG_DOWN = 0;
+                    BLOCK.horizontal_x = 1;
+                    BLOCK.y += -BLOCK_WIDTH;
+                    BLOCK.x += BLOCK_HEIGHT + BLOCK_WIDTH;
+                    BLOCK.axis = glm::vec3(0,0,1);
+                }
+            }
+            else
+            {
+                glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,-BLOCK_HEIGHT,0));
+                //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock2 = glm::rotate((float)((BLOCK.angle_x+270)*M_PI/180.0f), BLOCK.axis_x);
+                glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,BLOCK_HEIGHT,0));
+                Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle_x <= 0)
+                {
+                    BLOCK.angle_x = 0;
+                    BLOCK.angle_incr_x = 0;
+                    FLAG_DOWN = 0;
+                    BLOCK.horizontal_x = 0;
+                    BLOCK.y += BLOCK_HEIGHT-BLOCK_WIDTH;
+                    BLOCK.x += BLOCK_HEIGHT+BLOCK_WIDTH;
+                    //BLOCK.axis = glm::vec3(0,1,0);
+                }
+            }
+        }
+        else if(BLOCK.horizontal_z == 1)
+        {
+            glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,0,BLOCK_WIDTH));
+            //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+            glm::mat4 rotateBlock2 = glm::rotate((float)((-BLOCK.angle_x)*M_PI/180.0f), BLOCK.axis);
+            glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,0,-BLOCK_WIDTH));
+            Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+            MVP = VP * Matrices.model;
+            glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+            if(BLOCK.angle_x >= 90)
+            {
+                BLOCK.angle_x = 0;
+                BLOCK.angle_incr_x = 0;
+                FLAG_DOWN = 0;
+                //BLOCK.horizontal_z = 0;
+                BLOCK.y += 0;
+                BLOCK.x += 2*BLOCK_WIDTH;
+                //BLOCK.axis = glm::vec3(0,1,0);
+            }
+        }
+    }
+
+    else if(FLAG_DOWN == 1)
+    {
+        if(BLOCK.horizontal_z == 0)
+        {
+            if(BLOCK.horizontal_x == 0)
+            {  
+                Matrices.model = glm::mat4(1.0f);
+
+                glm::mat4 translateBlockToOrigin = glm::translate(glm::vec3(-BLOCK_WIDTH,-BLOCK_HEIGHT,0));
+                glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock = glm::rotate((float)((BLOCK.angle_x)*M_PI/180.0f), BLOCK.axis_x);
+                glm::mat4 translateFromOrigin = glm::translate(glm::vec3(BLOCK_WIDTH,BLOCK_HEIGHT,0));
+                Matrices.model *= (translateBlockToOrigin * translateBlock *  rotateBlock * translateFromOrigin);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle_x >= 90)
+                {
+                    BLOCK.angle_x = 90;
+                    BLOCK.angle_incr_x = 0;
+                    FLAG_DOWN = 0;
+                    BLOCK.horizontal_x = 1;
+                    BLOCK.y += -BLOCK_WIDTH;
+                    BLOCK.x += -BLOCK_HEIGHT-BLOCK_WIDTH;
+                    BLOCK.axis = glm::vec3(0,0,1);
+                }
+            }
+            else
+            {
+                glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,BLOCK_HEIGHT,0));
+                //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+                glm::mat4 rotateBlock2 = glm::rotate((float)((-BLOCK.angle_x-270)*M_PI/180.0f), BLOCK.axis_x);
+                glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,-BLOCK_HEIGHT,0));
+                Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+                MVP = VP * Matrices.model;
+                glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+                if(BLOCK.angle_x <= 0)
+                {
+                    BLOCK.angle_x = 0;
+                    BLOCK.angle_incr_x = 0;
+                    FLAG_DOWN = 0;
+                    BLOCK.horizontal_x = 0;
+                    BLOCK.y += BLOCK_WIDTH;
+                    BLOCK.x += -BLOCK_HEIGHT-BLOCK_WIDTH;
+                    //BLOCK.axis = glm::vec3(0,1,0);
+                }
+            }
+        }
+        else if(BLOCK.horizontal_z == 1)
+        {
+            glm::mat4 translateBlockToOrigin2 = glm::translate(glm::vec3(-BLOCK_WIDTH,0,BLOCK_WIDTH));
+            //glm::mat4 translateBlock = glm::translate(glm::vec3(BLOCK.x,BLOCK.y,BLOCK.z));
+            glm::mat4 rotateBlock2 = glm::rotate((float)((BLOCK.angle_x)*M_PI/180.0f), BLOCK.axis);
+            glm::mat4 translateFromOrigin2 = glm::translate(glm::vec3(BLOCK_WIDTH,0,-BLOCK_WIDTH));
+            Matrices.model *= (translateBlockToOrigin2 * rotateBlock2 * translateFromOrigin2);
+            MVP = VP * Matrices.model;
+            glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+            if(BLOCK.angle_x >= 90)
+            {
+                BLOCK.angle_x = 0;
+                BLOCK.angle_incr_x = 0;
+                FLAG_DOWN = 0;
+                //BLOCK.horizontal_z = 0;
+                BLOCK.y += 0;
+                BLOCK.x += -2*BLOCK_WIDTH;
+                //BLOCK.axis = glm::vec3(0,1,0);
+            }
+        }
+    }
     // draw3DObject draws the VAO given to it using current MVP matrix
     draw3DObject(BLOCK.block);
-
-    Matrices.model = glm::translate(floor_pos);
-    MVP = VP * Matrices.model;
-    glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
-
-    // draw3DObject draws the VAO given to it using current MVP matrix
-    //draw3DObject(floor_vao);
 
 }
 
@@ -119,13 +410,27 @@ int main (int argc, char** argv)
             FLOOR[cur].angle = FLOOR[cur-1].angle;
         }
     }
-    BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;
+    BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
     BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
     BLOCK.angle_incr=0;
-    rect_pos = glm::vec3(0, 0, 0);
+    if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+    {
+        BLOCK.y = BLOCK_HEIGHT;
+    }
+    else if(BLOCK.horizontal_x == 1 && BLOCK.horizontal_z == 0)
+    {
+        BLOCK.y = BLOCK_WIDTH;
+        BLOCK.x = BLOCK_WIDTH;
+    }
+    else if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 1)
+    {
+        BLOCK.y = BLOCK_WIDTH;
+        BLOCK.z = BLOCK_WIDTH;
+    }
+    /*rect_pos = glm::vec3(0, 0, 0);
     floor_pos = glm::vec3(0, 0, 0);
     do_rot = 0;
-    floor_rel = 1;
+    floor_rel = 1;*/
 
     GLFWwindow* window = initGLFW(width, height);
     initGL (window, width, height);

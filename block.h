@@ -27,10 +27,16 @@ typedef struct Block{
     float y;
     float z;
     float angle;
-    int horizontal_x;
+    float angle_x;
+    float angle_incr;
+    float angle_incr_x;
+    float trans_incr;
     int horizontal_z;
+    int horizontal_x;
     glm::vec3 axis;
+    glm::vec3 axis_x;
 }Block;
+
 
 extern Block BLOCK;
 

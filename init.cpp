@@ -25,108 +25,85 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
 	    quit(window);
 	    break;
     case GLFW_KEY_RIGHT:
-        FLAG_LEFT = 0;
-        if(BLOCK.horizontal_x == 0)
+        if(FLAG_LEFT != -1 && FLAG_DOWN == 0)
         {
-            if(BLOCK.horizontal_z == 0)
+            FLAG_LEFT = -1;
+            if(BLOCK.horizontal_x == 0)
             {
-                BLOCK.z += TILE_WIDTH;
-                BLOCK.horizontal_z = 1;
-                BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (BLOCK_WIDTH,0,0);
+                if(BLOCK.horizontal_z == 0)
+                {
+                    BLOCK.axis = glm::vec3 (1,0,0);
+                    BLOCK.angle_incr = ROTATION_SPEED;
+                }
+                else
+                {
+                    BLOCK.z += 2*BLOCK_WIDTH;                    
+                    BLOCK.axis = glm::vec3 (1,0,0);
+                    BLOCK.angle_incr = ROTATION_SPEED;
+                }
+            }
+            else if(BLOCK.horizontal_x == 1)
+            {
+                BLOCK.axis = glm::vec3(0,1,0);
                 BLOCK.angle_incr = ROTATION_SPEED;
             }
-            else
-            {
-                BLOCK.z += 5*TILE_WIDTH;
-                BLOCK.horizontal_z = 0;
-                BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
-                //BLOCK.angle_incr = -ROTATION_SPEED;
-            }
-        }
-        else if(BLOCK.horizontal_x == 1)
-        {
-            BLOCK.z += 2*TILE_WIDTH;
-            BLOCK.angle_incr = ROTATION_SPEED;
         }
         break;
     case GLFW_KEY_LEFT:
-        FLAG_LEFT = 1;
-        if(BLOCK.horizontal_x == 0)
+        if(FLAG_LEFT != 1 && FLAG_DOWN == 0)
         {
-            if(BLOCK.horizontal_z == 0)
+            FLAG_LEFT = 1;
+            if(BLOCK.horizontal_x == 0)
             {
-                BLOCK.z -= 5*TILE_WIDTH;
-                BLOCK.horizontal_z = 1;
-                BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (BLOCK_WIDTH,0,0);
+                BLOCK.axis = glm::vec3 (1,0,0);
+                BLOCK.angle_incr = -ROTATION_SPEED;
+            }
+            else if(BLOCK.horizontal_x == 1)
+            {
+                BLOCK.axis = glm::vec3(0,1,0);
                 BLOCK.angle_incr = ROTATION_SPEED;
             }
-            else
-            {
-                BLOCK.z -= TILE_WIDTH;
-                BLOCK.horizontal_z = 0;
-                BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
-                //BLOCK.angle_incr = -ROTATION_SPEED;
-            }
-        }
-        else if(BLOCK.horizontal_x == 1)
-        {
-            BLOCK.z -= 2*TILE_WIDTH;
         }
         break;
     case GLFW_KEY_UP:
-        FLAG_DOWN = 0;
-        if(BLOCK.horizontal_z == 0)
+        if(FLAG_DOWN != -1 && FLAG_LEFT == 0)
         {
-            if(BLOCK.horizontal_x == 0)
+            FLAG_DOWN = -1;
+            //cout << "HZ: " << BLOCK.horizontal_z << " HX : " << BLOCK.horizontal_x << endl;
+            if(BLOCK.horizontal_z == 0)
             {
-                BLOCK.x += 5*TILE_WIDTH;
-                BLOCK.horizontal_x = 1;
-                BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,0,BLOCK_WIDTH);
-                BLOCK.angle_incr = ROTATION_SPEED;
+                BLOCK.axis_x = glm::vec3 (0,0,1);
+                BLOCK.angle_incr_x = -ROTATION_SPEED;
             }
-            else
+            else if(BLOCK.horizontal_z == 1)
             {
-                BLOCK.x += TILE_WIDTH;
-                BLOCK.horizontal_x = 0;
-                BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
-                //BLOCK.angle_incr = -ROTATION_SPEED;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle_incr_x = ROTATION_SPEED;
             }
-        }
-        else if(BLOCK.horizontal_z == 1)
-        {
-            BLOCK.x += 2*TILE_WIDTH;
         }
         break;
     case GLFW_KEY_DOWN:
-        FLAG_DOWN = 1;
-        if(BLOCK.horizontal_z == 0)
+        if(FLAG_DOWN != 1 && FLAG_LEFT == 0)
         {
-            if(BLOCK.horizontal_x == 0)
+            FLAG_DOWN = 1;
+            if(BLOCK.horizontal_z == 0)
             {
-                BLOCK.x -= TILE_WIDTH;
-                BLOCK.horizontal_x = 1;
-                BLOCK.y += TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,0,BLOCK_WIDTH);
-                BLOCK.angle_incr = ROTATION_SPEED;
+                if(BLOCK.horizontal_x == 0)
+                {   
+                    BLOCK.axis_x = glm::vec3 (0,0,1);
+                    BLOCK.angle_incr_x = ROTATION_SPEED;
+                }
+                else
+                {
+                    BLOCK.axis_x = glm::vec3 (0,0,1);
+                    BLOCK.angle_incr_x = -ROTATION_SPEED;
+                }
             }
-            else
+            else if(BLOCK.horizontal_z == 1)
             {
-                BLOCK.x -= 5*TILE_WIDTH;
-                BLOCK.horizontal_x = 0;
-                BLOCK.y -= TILE_WIDTH;
-                BLOCK.axis = glm::vec3 (0,BLOCK_WIDTH,0);
-                //BLOCK.angle_incr = -ROTATION_SPEED;
+                BLOCK.axis = glm::vec3 (0,1,0);
+                BLOCK.angle_incr_x = ROTATION_SPEED;
             }
-        }
-        else if(BLOCK.horizontal_z == 1)
-        {
-            BLOCK.x -= 2*TILE_WIDTH;
         }
         break;
 	default:
