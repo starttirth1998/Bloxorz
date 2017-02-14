@@ -1,5 +1,4 @@
 
-
 struct VAO {
     GLuint VertexArrayID;
     GLuint VertexBuffer;
@@ -17,6 +16,7 @@ typedef struct Floor{
     int flag;
     int goal;
     int fragile;
+    int key;
     float x;
     float y;
     float z;
@@ -60,6 +60,7 @@ GLFWwindow* initGLFW (int width, int height);
 void initGL (GLFWwindow* window, int width, int height);
 void level1();
 void gameOver();
+void restart();
 
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 struct VAO* create3DObject (GLenum primitive_mode, int numVertices, const GLfloat* vertex_buffer_data, const GLfloat* color_buffer_data, GLenum fill_mode);

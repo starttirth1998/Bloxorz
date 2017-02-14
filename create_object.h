@@ -16,6 +16,7 @@ typedef struct Floor{
     int flag;
     int goal;
     int fragile;
+    int key;
     float x;
     float y;
     float z;

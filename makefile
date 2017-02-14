@@ -1,5 +1,5 @@
 
-OPTS =  -lGL -lglfw -ldl
+OPTS =  -lGL -lglfw -ldl -I"irrKlang-64bit-1.5.0/include" -L"/usr/lib" irrKlang-64bit-1.5.0/bin/linux-gcc-64/libIrrKlang.so -pthread
 
 all: sample2D
 

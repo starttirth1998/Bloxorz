@@ -1,5 +1,8 @@
 #include "header.h"
 #include "main.h"
+#include <irrKlang.h>
+
+using namespace irrklang;
 
 /**************************
  * Customizable functions *
@@ -7,6 +10,7 @@
 
 void level1()
 {
+    FLOOR[52].fragile = 1;FLOOR[51].fragile = 1;FLOOR[63].key = 43;FLOOR[43].flag = 0;
     for(int i=0;i<10;i++)
     {
         for(int j=1;j<10;j++)
@@ -14,9 +18,48 @@ void level1()
             int cur = 10*i+j;
             if(j > 7)
                 FLOOR[cur].flag = 0;
-            if(i < 2)
-                FLOOR[cur].fragile = 1;
-            if(i == 8 && j == 6)
+            if(i == 0 && j > 2)
+                FLOOR[cur].flag = 0;
+            if(i == 1 && j > 3)
+                FLOOR[cur].flag = 0;
+            if(i == 2 && j > 3)
+                FLOOR[cur].flag = 0;
+            if(i == 3 && j > 3)
+            {
+                FLOOR[30].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 4 && j > 3)
+            {
+                FLOOR[40].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 5 && j > 4)
+            {
+                FLOOR[50].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 6 && j > 5)
+            {
+                FLOOR[60].flag = 0;FLOOR[61].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 7 && j > 5)
+            {
+                FLOOR[70].flag = 0;FLOOR[71].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 8 && j > 5)
+            {
+                FLOOR[80].flag = 0;FLOOR[81].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 9 && (j > 4 || j < 3))
+            {
+                FLOOR[90].flag = 0;
+                FLOOR[cur].flag = 0;
+            }
+            if(i == 7 && j == 4)
             {
                 FLOOR[cur].flag = 0;
                 FLOOR[cur].goal = 1;
@@ -29,9 +72,17 @@ void gameOver(int cur)
 {
     if(cur < 0)
     {
-        cout << "GAME OVER: YOU LOSE" << endl;
+        cout << "GAME OVER: YOU LOSE -> BLOCK FALL DOWN" << endl;
         cout << "MOVES: " << MOVES << endl;
         quit(window);
+    }
+    if(FLOOR[cur].key != -INT_MAX)
+    {
+        if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+        {
+            if(FLOOR[FLOOR[cur].key].flag == 0)
+                FLOOR[FLOOR[cur].key].flag = 1;
+        }
     }
     if(FLOOR[cur].fragile == 1)
     {
@@ -55,13 +106,14 @@ void gameOver(int cur)
         }
         else
         {
-            cout << "GAME OVER: YOU LOSE" << endl;
+            cout << "GAME OVER: YOU LOSE  -> BLOCK FALL DOWN" << endl;
             cout << "MOVES: " << MOVES << endl;
             quit(window);
         }
 
     }
 }
+
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
@@ -472,6 +524,16 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
 
 int main (int argc, char** argv)
 {
+    /*ISoundEngine* engine = createIrrKlangDevice();
+
+    if (!engine)
+    {
+        printf("Could not startup engine\n");
+        return 0; 
+    }
+
+    engine->play2D("irrKlang-64bit-1.5.0/media/MF-W-90.XM", true);*/
+
     int width = 600;
     int height = 600;
     for(int i=0;i<10;i++)
@@ -483,6 +545,7 @@ int main (int argc, char** argv)
         FLOOR[10*i].index = 0;
         FLOOR[10*i].flag = 1;
         FLOOR[10*i].goal = 0;
+        FLOOR[10*i].key = -INT_MAX;
         FLOOR[10*i].fragile = 0;
     }
     for(int i=0;i<10;i++)
@@ -497,6 +560,7 @@ int main (int argc, char** argv)
             FLOOR[cur].z = FLOOR[cur-1].z+2.0;
             FLOOR[cur].angle = FLOOR[cur-1].angle;
             FLOOR[cur].goal = 0;
+            FLOOR[cur].key = -INT_MAX;
             FLOOR[cur].fragile = 0;
         }
     }
