@@ -25,7 +25,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
 	    quit(window);
 	    break;
     case GLFW_KEY_RIGHT:
-        if(FLAG_LEFT != -1 && FLAG_DOWN == 0)
+        if(FLAG_LEFT == 0 && FLAG_DOWN == 0)
         {
             FLAG_LEFT = -1;
             if(BLOCK.horizontal_x == 0)
@@ -50,7 +50,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
         }
         break;
     case GLFW_KEY_LEFT:
-        if(FLAG_LEFT != 1 && FLAG_DOWN == 0)
+        if(FLAG_LEFT == 0 && FLAG_DOWN == 0)
         {
             FLAG_LEFT = 1;
             if(BLOCK.horizontal_x == 0)
@@ -66,7 +66,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
         }
         break;
     case GLFW_KEY_UP:
-        if(FLAG_DOWN != -1 && FLAG_LEFT == 0)
+        if(FLAG_DOWN == 0 && FLAG_LEFT == 0)
         {
             FLAG_DOWN = -1;
             //cout << "HZ: " << BLOCK.horizontal_z << " HX : " << BLOCK.horizontal_x << endl;
@@ -83,7 +83,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
         }
         break;
     case GLFW_KEY_DOWN:
-        if(FLAG_DOWN != 1 && FLAG_LEFT == 0)
+        if(FLAG_DOWN == 0 && FLAG_LEFT == 0)
         {
             FLAG_DOWN = 1;
             if(BLOCK.horizontal_z == 0)

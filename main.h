@@ -95,5 +95,5 @@ int BLOCK_VIEW_FLAG = 0;
 int FLAG_LEFT = 0;
 int FLAG_DOWN = 0;
 
-float ROTATION_SPEED = 5.0f;
+float ROTATION_SPEED = 10.0f;
 
