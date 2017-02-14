@@ -45,6 +45,7 @@ extern float TILE_WIDTH;
 extern float BLOCK_HEIGHT;
 extern int FOLLOW_VIEW_FLAG;
 extern int BLOCK_VIEW_FLAG;
+extern int TOWER_VIEW_FLAG;
 
 void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods);
 void keyboardChar (GLFWwindow* window, unsigned int key);
@@ -73,3 +74,5 @@ extern float ROTATION_SPEED;
 
 
 extern float BLOCK_WIDTH,BLOCK_HEIGHT;
+
+extern int MOVES;

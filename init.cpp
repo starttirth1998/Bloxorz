@@ -27,6 +27,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
     case GLFW_KEY_RIGHT:
         if(FLAG_LEFT == 0 && FLAG_DOWN == 0)
         {
+            MOVES++;
             FLAG_LEFT = -1;
             if(BLOCK.horizontal_x == 0)
             {
@@ -52,6 +53,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
     case GLFW_KEY_LEFT:
         if(FLAG_LEFT == 0 && FLAG_DOWN == 0)
         {
+            MOVES++;
             FLAG_LEFT = 1;
             if(BLOCK.horizontal_x == 0)
             {
@@ -68,6 +70,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
     case GLFW_KEY_UP:
         if(FLAG_DOWN == 0 && FLAG_LEFT == 0)
         {
+            MOVES++;
             FLAG_DOWN = -1;
             //cout << "HZ: " << BLOCK.horizontal_z << " HX : " << BLOCK.horizontal_x << endl;
             if(BLOCK.horizontal_z == 0)
@@ -85,6 +88,7 @@ void keyboard (GLFWwindow* window, int key, int scancode, int action, int mods)
     case GLFW_KEY_DOWN:
         if(FLAG_DOWN == 0 && FLAG_LEFT == 0)
         {
+            MOVES++;
             FLAG_DOWN = 1;
             if(BLOCK.horizontal_z == 0)
             {
@@ -129,6 +133,7 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     BLOCK_VIEW_FLAG = 0;
 	break;
     case 't':
+    TOWER_VIEW_FLAG = 1;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
     eye = TOWER_VIEW_EYE;
@@ -136,11 +141,54 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     up = TOWER_VIEW_UP;
     break;
     case 'v':
+    TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
     eye = TOP_VIEW_EYE;
     target = TOP_VIEW_TARGET;
     up = TOP_VIEW_UP;
+    break;
+    case 'w':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(0,0.1,0);
+    //up = eye*target;
+    break;
+    case 'x':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(0,-0.1,0);
+    //up = eye*target;
+    break;
+    case 'a':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(-0.1,0,0);
+    //up = eye*target;
+    break;
+    case 'd':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(0.1,0,0);
+    //up = eye*target;
+    break;
+    case 's':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(0,0,0.1);
+    //up = eye*target;
+    break;
+    case 'z':
+    TOWER_VIEW_FLAG = 0;
+    FOLLOW_VIEW_FLAG = 0;
+    BLOCK_VIEW_FLAG = 0;
+    eye += glm::vec3(0,0,-0.1);
+    //up = eye*target;
     break;
     default:
 	break;

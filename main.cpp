@@ -5,6 +5,63 @@
  * Customizable functions *
  **************************/
 
+void level1()
+{
+    for(int i=0;i<10;i++)
+    {
+        for(int j=1;j<10;j++)
+        {
+            int cur = 10*i+j;
+            if(j > 7)
+                FLOOR[cur].flag = 0;
+            if(i < 2)
+                FLOOR[cur].fragile = 1;
+            if(i == 8 && j == 6)
+            {
+                FLOOR[cur].flag = 0;
+                FLOOR[cur].goal = 1;
+            }
+        }
+    }
+}
+
+void gameOver(int cur)
+{
+    if(cur < 0)
+    {
+        cout << "GAME OVER: YOU LOSE" << endl;
+        cout << "MOVES: " << MOVES << endl;
+        quit(window);
+    }
+    if(FLOOR[cur].fragile == 1)
+    {
+        if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+        {
+            cout << "GAME OVER: YOU LOSE -> FRAGILE TILE" << endl;
+            cout << "MOVES: " << MOVES << endl;
+            quit(window);
+        }
+    }
+    if(FLOOR[cur].flag == 0)
+    {
+        if(FLOOR[cur].goal)
+        {
+            if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+            {
+                cout << "GAME OVER: YOU WON" << endl;
+                cout << "MOVES: " << MOVES << endl;
+                quit(window);
+            }
+        }
+        else
+        {
+            cout << "GAME OVER: YOU LOSE" << endl;
+            cout << "MOVES: " << MOVES << endl;
+            quit(window);
+        }
+
+    }
+}
 
 /* Render the scene with openGL */
 /* Edit this function according to your assignment */
@@ -38,23 +95,26 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     
     for(int i=0;i<100;i++)
     {
-        glm::mat4 MVP;	// MVP = Projection * View * Model
+        if(FLOOR[i].flag)
+        {
+            glm::mat4 MVP;	// MVP = Projection * View * Model
 
-        // Load identity to model matrix
-        Matrices.model = glm::mat4(1.0f);
-        glm::mat4 translateRectangle = glm::translate (glm::vec3(FLOOR[i].x,FLOOR[i].y,FLOOR[i].z));
-        glm::mat4 rotateRectangle = glm::rotate((float)(FLOOR[i].angle*M_PI/180.0f), glm::vec3(0,0,1));
-        Matrices.model *= (translateRectangle * rotateRectangle);
-        if(floor_rel)
-            Matrices.model = Matrices.model * glm::translate(floor_pos);
-        if(doM)
-            MVP = VP * Matrices.model;
-        else
-            MVP = VP;
-        glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
+            // Load identity to model matrix
+            Matrices.model = glm::mat4(1.0f);
+            glm::mat4 translateRectangle = glm::translate (glm::vec3(FLOOR[i].x,FLOOR[i].y,FLOOR[i].z));
+            glm::mat4 rotateRectangle = glm::rotate((float)(FLOOR[i].angle*M_PI/180.0f), glm::vec3(0,0,1));
+            Matrices.model *= (translateRectangle * rotateRectangle);
+            if(floor_rel)
+                Matrices.model = Matrices.model * glm::translate(floor_pos);
+            if(doM)
+                MVP = VP * Matrices.model;
+            else
+                MVP = VP;
+            glUniformMatrix4fv(Matrices.MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
-        // draw3DObject draws the VAO given to it using current MVP matrix
-        draw3DObject(FLOOR[i].floor);
+            // draw3DObject draws the VAO given to it using current MVP matrix
+            draw3DObject(FLOOR[i].floor);
+        }
     }
     
 
@@ -381,9 +441,33 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
             }
         }
     }
+
     // draw3DObject draws the VAO given to it using current MVP matrix
     draw3DObject(BLOCK.block);
 
+    //int cur = 10*BLOCK.x+BLOCK.z;
+    int cur = 25;
+
+    if(BLOCK.horizontal_z == 0 && BLOCK.horizontal_x == 0)
+    {
+        cur = 10*BLOCK.x/(2*BLOCK_WIDTH) + BLOCK.z/(2*BLOCK_WIDTH);
+        gameOver(cur);           
+    }
+    else if(BLOCK.horizontal_z == 1)
+    {
+        cur = 10*BLOCK.x/(2*BLOCK_WIDTH) + (BLOCK.z-BLOCK_WIDTH)/(2*BLOCK_WIDTH);
+        gameOver(cur);
+        cur = 10*BLOCK.x/(2*BLOCK_WIDTH) + (BLOCK.z+BLOCK_WIDTH)/(2*BLOCK_WIDTH);
+        gameOver(cur);
+        //cout << " X : " << BLOCK.x/(2*BLOCK_WIDTH) << " Z : " << (BLOCK.z-BLOCK_WIDTH)/(2*BLOCK_WIDTH) << endl;
+    }
+    else if(BLOCK.horizontal_x == 1)
+    {
+        cur = (10*(BLOCK.x-BLOCK_WIDTH))/(2*BLOCK_WIDTH) + BLOCK.z/(2*BLOCK_WIDTH);
+        gameOver(cur);
+        cur = (10*(BLOCK.x+BLOCK_WIDTH))/(2*BLOCK_WIDTH) + BLOCK.z/(2*BLOCK_WIDTH);
+        gameOver(cur);
+    }
 }
 
 int main (int argc, char** argv)
@@ -392,24 +476,31 @@ int main (int argc, char** argv)
     int height = 600;
     for(int i=0;i<10;i++)
     {
-        FLOOR[10*i].x = 2*i-4;
+        FLOOR[10*i].x = 2*i;
         FLOOR[10*i].y = 0;
-        FLOOR[10*i].z = -4;
+        FLOOR[10*i].z = 0;
         FLOOR[10*i].angle = 0;
         FLOOR[10*i].index = 0;
+        FLOOR[10*i].flag = 1;
+        FLOOR[10*i].goal = 0;
+        FLOOR[10*i].fragile = 0;
     }
     for(int i=0;i<10;i++)
     {
         for(int j=1;j<10;j++)
         {
             int cur = 10*i+j;
+            FLOOR[cur].flag = 1;
             FLOOR[cur].index = cur;
             FLOOR[cur].x = FLOOR[cur-1].x;
             FLOOR[cur].y = FLOOR[cur-1].y;
             FLOOR[cur].z = FLOOR[cur-1].z+2.0;
             FLOOR[cur].angle = FLOOR[cur-1].angle;
+            FLOOR[cur].goal = 0;
+            FLOOR[cur].fragile = 0;
         }
     }
+    level1();
     BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
     BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
     BLOCK.angle_incr=0;
@@ -432,17 +523,11 @@ int main (int argc, char** argv)
     do_rot = 0;
     floor_rel = 1;*/
 
-    GLFWwindow* window = initGLFW(width, height);
+    window = initGLFW(width, height);
     initGL (window, width, height);
 
     // Eye - Location of camera. Don't change unless you are sure!!
-    eye = TOWER_VIEW_EYE;
-    //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
-
-    // Target - Where is the camera looking at.  Don't change unless you are sure!!
-    target = TOWER_VIEW_TARGET;
-    // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
-    up = TOWER_VIEW_UP;
+    
 
     last_update_time = glfwGetTime();
     /* Draw in loop */
@@ -459,6 +544,16 @@ int main (int argc, char** argv)
 	    camera_rotation_angle -= 720;
 	last_update_time = current_time;
 
+    if(TOWER_VIEW_FLAG)
+    {
+        eye = TOWER_VIEW_EYE;
+        //glm::vec3 eye ( 5*cos(camera_rotation_angle*M_PI/180.0f), 0, 5*sin(camera_rotation_angle*M_PI/180.0f) );
+
+        // Target - Where is the camera looking at.  Don't change unless you are sure!!
+        target = TOWER_VIEW_TARGET;
+        // Up - Up vector defines tilt of camera.  Don't change unless you are sure!!
+        up = TOWER_VIEW_UP;
+    }
     if(FOLLOW_VIEW_FLAG || BLOCK_VIEW_FLAG)
     {
         eye = glm::vec3(BLOCK.x,BLOCK.y+5,BLOCK.z);

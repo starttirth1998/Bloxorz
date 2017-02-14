@@ -13,6 +13,9 @@ typedef struct VAO VAO;
 typedef struct Floor{
     VAO* floor;
     int index;
+    int flag;
+    int goal;
+    int fragile;
     float x;
     float y;
     float z;

@@ -14,6 +14,9 @@ typedef struct VAO VAO;
 typedef struct Floor{
     VAO* floor;
     int index;
+    int flag;
+    int goal;
+    int fragile;
     float x;
     float y;
     float z;
@@ -55,6 +58,8 @@ void error_callback(int error, const char* description);
 void quit(GLFWwindow *window);
 GLFWwindow* initGLFW (int width, int height);
 void initGL (GLFWwindow* window, int width, int height);
+void level1();
+void gameOver();
 
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 struct VAO* create3DObject (GLenum primitive_mode, int numVertices, const GLfloat* vertex_buffer_data, const GLfloat* color_buffer_data, GLenum fill_mode);
@@ -74,7 +79,7 @@ VAO *rectangle, *cam, *floor_vao;
 
 float camera_rotation_angle = 0;
 float TILE_WIDTH = 1.0;
-float TILE_HEIGHT = 2.0;
+float TILE_HEIGHT = 0.5;
 float BLOCK_WIDTH = TILE_WIDTH;
 float BLOCK_HEIGHT = 2.0;
 
@@ -82,18 +87,22 @@ glm::vec3 up;
 glm::vec3 target;
 glm::vec3 eye;
 
-glm::vec3 TOWER_VIEW_EYE = glm::vec3(-6, 10, -4); 
-glm::vec3 TOWER_VIEW_TARGET = glm::vec3(0,0,0); 
+glm::vec3 TOWER_VIEW_EYE = glm::vec3(-3, 14, -2); 
+glm::vec3 TOWER_VIEW_TARGET = glm::vec3(8,0,8); 
 glm::vec3 TOWER_VIEW_UP = glm::vec3(1,3,1);
 
-glm::vec3 TOP_VIEW_EYE = glm::vec3(4.5, 15, 4.5); 
-glm::vec3 TOP_VIEW_TARGET = glm::vec3(4.5,0,4.5); 
+glm::vec3 TOP_VIEW_EYE = glm::vec3(9,15,4); 
+glm::vec3 TOP_VIEW_TARGET = glm::vec3(9,0,4); 
 glm::vec3 TOP_VIEW_UP = glm::vec3(1,0,1);
 
 int FOLLOW_VIEW_FLAG = 0;
 int BLOCK_VIEW_FLAG = 0;
+int TOWER_VIEW_FLAG = 1;
 int FLAG_LEFT = 0;
 int FLAG_DOWN = 0;
 
 float ROTATION_SPEED = 10.0f;
 
+GLFWwindow* window;
+
+int MOVES = 0;
