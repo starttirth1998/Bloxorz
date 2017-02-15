@@ -152,8 +152,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,HELI_VIEW_SPEED,0);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(0,-HELI_VIEW_SPEED,0);
+    //up = glm::vec3(0,0,1);
     //up = glm::cross(eye,target);
     //up = eye*target;
     break;
@@ -161,8 +161,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,-HELI_VIEW_SPEED,0);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(0,HELI_VIEW_SPEED,0);
+    //up = glm::vec3(0,0,1);
     //up = glm::cross(eye,target);
     //up = eye*target;
     break;
@@ -170,8 +170,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(-HELI_VIEW_SPEED,0,0);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(-HELI_VIEW_SPEED,0,0);
+    //up = glm::vec3(0,0,1);
     //up = glm::cross(eye,target);
     //up = eye*target;
     break;
@@ -179,8 +179,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(HELI_VIEW_SPEED,0,0);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(HELI_VIEW_SPEED,0,0);
+    //up = glm::vec3(0,0,1);
     //up = eye*target;
     //up = glm::cross(eye,target);
     break;
@@ -188,8 +188,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,0,HELI_VIEW_SPEED);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(0,0,-HELI_VIEW_SPEED);
+    //up = glm::vec3(0,0,1);
     //up = eye*target;
     //up = glm::cross(eye,target);
     break;
@@ -197,8 +197,8 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,0,-HELI_VIEW_SPEED);
-    up = glm::vec3(0,0,1);
+    target += glm::vec3(0,0,HELI_VIEW_SPEED);
+    //up = glm::vec3(0,0,1);
     //up = glm::cross(eye,target);
     break;
     default:
@@ -218,13 +218,15 @@ void mouseButton (GLFWwindow* window, int button, int action, int mods)
         TOWER_VIEW_FLAG = 0;
         BLOCK_VIEW_FLAG = 0;
         FOLLOW_VIEW_FLAG = 0;
+        break;
 	}
-	break;
+	
     if (action == GLFW_RELEASE) 
     {
         DRAG_STATUS = 0;
+        break;
 	}
-    break;
+    
     default:
 	break;
     }

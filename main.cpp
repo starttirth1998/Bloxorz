@@ -733,7 +733,7 @@ int main (int argc, char** argv)
         posy -= 300;
         posx = posx*1.0/300.0;
         posy = -posy*1.0/300.0;
-        target = glm::vec3(posx,posy,0);
+        target += glm::vec3(HELI_VIEW_SPEED*posx,-HELI_VIEW_SPEED*posy,0);
     }
     if(TOWER_VIEW_FLAG)
     {
