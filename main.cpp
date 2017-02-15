@@ -161,7 +161,6 @@ void level2()
                 FLOOR[cur].flag = 0;
             FLOOR[41].fragile = 0;
             FLOOR[42].fragile = 0;
-            //FLOOR[60].fragile = 1;
             FLOOR[70].key = 84;FLOOR[84].flag = 0;
             FLOOR[84].key = 43;FLOOR[43].flag = 0;
             FLOOR[43].key = 54;FLOOR[54].flag = 0;
