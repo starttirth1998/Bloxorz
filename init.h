@@ -80,4 +80,6 @@ extern float HELI_VIEW_SPEED;
 
 extern double posx;
 extern double posy;
+extern double posz;
+
 extern int DRAG_STATUS;

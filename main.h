@@ -112,7 +112,7 @@ int TOWER_VIEW_FLAG = 1;
 int FLAG_LEFT = 0;
 int FLAG_DOWN = 0;
 
-float ROTATION_SPEED = 10.0f;
+float ROTATION_SPEED = 6.0f;
 
 GLFWwindow* window;
 
@@ -122,4 +122,5 @@ float HELI_VIEW_SPEED = 0.3f;
 
 double posx = 0.0;
 double posy = 0.0;
+double posz = 0.0;
 int DRAG_STATUS = 0;

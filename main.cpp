@@ -161,6 +161,7 @@ void level2()
                 FLOOR[cur].flag = 0;
             FLOOR[41].fragile = 0;
             FLOOR[42].fragile = 0;
+            //FLOOR[60].fragile = 1;
             FLOOR[70].key = 84;FLOOR[84].flag = 0;
             FLOOR[84].key = 43;FLOOR[43].flag = 0;
             FLOOR[43].key = 54;FLOOR[54].flag = 0;
@@ -733,7 +734,9 @@ int main (int argc, char** argv)
         posy -= 300;
         posx = posx*1.0/300.0;
         posy = -posy*1.0/300.0;
+        //cout << posx << " " << posy << endl;
         target += glm::vec3(HELI_VIEW_SPEED*posx,-HELI_VIEW_SPEED*posy,0);
+        //eye += glm::vec3(0,0,HELI_VIEW_SPEED*posz);
     }
     if(TOWER_VIEW_FLAG)
     {

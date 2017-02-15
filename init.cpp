@@ -146,7 +146,7 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     BLOCK_VIEW_FLAG = 0;
     eye = TOP_VIEW_EYE;
     target = TOP_VIEW_TARGET;
-    up = TOP_VIEW_UP;
+    //up = TOP_VIEW_UP;
     break;
     case 'w':
     TOWER_VIEW_FLAG = 0;
@@ -265,6 +265,18 @@ void quit(GLFWwindow *window)
     exit(EXIT_SUCCESS);
 }
 
+void scroll_callback(GLFWwindow* window, double x, double y)
+{
+    posz += (float) y;
+    if(posz > 3)
+        posz = 3;
+    if(posz < -3)
+        posz = -3;
+    //cout << posz << endl;
+    eye += glm::vec3(0,0,-HELI_VIEW_SPEED*posz);
+    //reshapeWindow(window,width,height);
+}
+
 /* Initialise glfw window, I/O callbacks and the renderer to use */
 /* Nothing to Edit here */
 GLFWwindow* initGLFW (int width, int height){
@@ -296,6 +308,7 @@ GLFWwindow* initGLFW (int width, int height){
     glfwSetKeyCallback(window, keyboard);      // general keyboard input
     glfwSetCharCallback(window, keyboardChar);  // simpler specific character handling
     glfwSetMouseButtonCallback(window, mouseButton);  // mouse button clicks
+    glfwSetScrollCallback(window, scroll_callback);
 
     return window;
 }
