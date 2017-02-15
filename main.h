@@ -125,5 +125,5 @@ double posy = 0.0;
 double posz = 0.0;
 int DRAG_STATUS = 0;
 
-int AVA_TIME = 90;
+int AVA_TIME = 45;
 int TIME = AVA_TIME;
