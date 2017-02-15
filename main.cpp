@@ -653,63 +653,12 @@ int main (int argc, char** argv)
 
     int width = 600;
     int height = 600;
-    /*for(int i=0;i<10;i++)
-    {
-        FLOOR[10*i].x = 2*i;
-        FLOOR[10*i].y = 0;
-        FLOOR[10*i].z = 0;
-        FLOOR[10*i].angle = 0;
-        FLOOR[10*i].index = 0;
-        FLOOR[10*i].flag = 1;
-        FLOOR[10*i].goal = 0;
-        FLOOR[10*i].key = -INT_MAX;
-        FLOOR[10*i].fragile = 0;
-    }
-    for(int i=0;i<10;i++)
-    {
-        for(int j=1;j<10;j++)
-        {
-            int cur = 10*i+j;
-            FLOOR[cur].flag = 1;
-            FLOOR[cur].index = cur;
-            FLOOR[cur].x = FLOOR[cur-1].x;
-            FLOOR[cur].y = FLOOR[cur-1].y;
-            FLOOR[cur].z = FLOOR[cur-1].z+2.0;
-            FLOOR[cur].angle = FLOOR[cur-1].angle;
-            FLOOR[cur].goal = 0;
-            FLOOR[cur].key = -INT_MAX;
-            FLOOR[cur].fragile = 0;
-        }
-    }*/
+
     restart();
     level1();
-    /*BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
-    BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
-    BLOCK.angle_incr=0;
-    if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
-    {
-        BLOCK.y = BLOCK_HEIGHT;
-    }
-    else if(BLOCK.horizontal_x == 1 && BLOCK.horizontal_z == 0)
-    {
-        BLOCK.y = BLOCK_WIDTH;
-        BLOCK.x = BLOCK_WIDTH;
-    }
-    else if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 1)
-    {
-        BLOCK.y = BLOCK_WIDTH;
-        BLOCK.z = BLOCK_WIDTH;
-    }*/
-    /*rect_pos = glm::vec3(0, 0, 0);
-    floor_pos = glm::vec3(0, 0, 0);
-    do_rot = 0;
-    floor_rel = 1;*/
 
     window = initGLFW(width, height);
     initGL (window, width, height);
-
-    // Eye - Location of camera. Don't change unless you are sure!!
-    
 
     last_update_time = glfwGetTime();
     /* Draw in loop */
@@ -720,6 +669,13 @@ int main (int argc, char** argv)
 
         // OpenGL Draw commands
 	current_time = glfwGetTime();
+    /*cout << " TIME REMANING : " << TIME - current_time << endl;
+    if(current_time > TIME - 0.02)
+    {
+        cout << "GAME OVER: YOU LOSE -> TIME UP" << endl;
+        cout << "MOVES: " << MOVES << endl;
+        quit(window);
+    }*/
 	if(do_rot)
 	    camera_rotation_angle += 90*(current_time - last_update_time); // Simulating camera rotation
 	if(camera_rotation_angle > 720)

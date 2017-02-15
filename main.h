@@ -124,3 +124,5 @@ double posx = 0.0;
 double posy = 0.0;
 double posz = 0.0;
 int DRAG_STATUS = 0;
+
+int TIME = 90;
