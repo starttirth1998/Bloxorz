@@ -76,3 +76,8 @@ extern float ROTATION_SPEED;
 extern float BLOCK_WIDTH,BLOCK_HEIGHT;
 
 extern int MOVES;
+extern float HELI_VIEW_SPEED;
+
+extern double posx;
+extern double posy;
+extern int DRAG_STATUS;

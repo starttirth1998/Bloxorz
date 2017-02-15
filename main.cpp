@@ -8,6 +8,56 @@ using namespace irrklang;
  * Customizable functions *
  **************************/
 
+void restart()
+{
+    for(int i=0;i<10;i++)
+    {
+        FLOOR[10*i].x = 2*i;
+        FLOOR[10*i].y = 0;
+        FLOOR[10*i].z = 0;
+        FLOOR[10*i].angle = 0;
+        FLOOR[10*i].index = 0;
+        FLOOR[10*i].flag = 1;
+        FLOOR[10*i].goal = 0;
+        FLOOR[10*i].key = -INT_MAX;
+        FLOOR[10*i].fragile = 0;
+    }
+    for(int i=0;i<10;i++)
+    {
+        for(int j=1;j<10;j++)
+        {
+            int cur = 10*i+j;
+            FLOOR[cur].flag = 1;
+            FLOOR[cur].index = cur;
+            FLOOR[cur].x = FLOOR[cur-1].x;
+            FLOOR[cur].y = FLOOR[cur-1].y;
+            FLOOR[cur].z = FLOOR[cur-1].z+2.0;
+            FLOOR[cur].angle = FLOOR[cur-1].angle;
+            FLOOR[cur].goal = 0;
+            FLOOR[cur].key = -INT_MAX;
+            FLOOR[cur].fragile = 0;
+        }
+    }
+    //level1();
+    BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
+    BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
+    BLOCK.angle_incr=0;
+    if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
+    {
+        BLOCK.y = BLOCK_HEIGHT;
+    }
+    else if(BLOCK.horizontal_x == 1 && BLOCK.horizontal_z == 0)
+    {
+        BLOCK.y = BLOCK_WIDTH;
+        BLOCK.x = BLOCK_WIDTH;
+    }
+    else if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 1)
+    {
+        BLOCK.y = BLOCK_WIDTH;
+        BLOCK.z = BLOCK_WIDTH;
+    }
+}
+
 void level1()
 {
     FLOOR[52].fragile = 1;FLOOR[51].fragile = 1;FLOOR[63].key = 43;FLOOR[43].flag = 0;
@@ -68,9 +118,61 @@ void level1()
     }
 }
 
+void level2()
+{
+    for(int i=0;i<10;i++)
+    {
+        FLOOR[30].flag = 0;
+        if(i > 7)
+            FLOOR[10*i].flag = 0;
+    }
+    for(int i=0;i<10;i++)
+    {
+        for(int j=1;j<10;j++)
+        {
+            int cur = 10*i+j;
+            if(i == 9) 
+                FLOOR[cur].flag = 0;
+            if(j < 3)
+                FLOOR[cur].fragile = 1;
+            if(j == 3)
+            {
+                if(i < 5 || i > 7)
+                    FLOOR[cur].flag = 0;
+                else
+                {
+                    FLOOR[cur].fragile = 1;
+                }
+            }
+            if(j == 4)
+            {
+                if(i < 5 || i > 7)
+                    FLOOR[cur].flag = 0;
+                FLOOR[74].fragile = 1;
+            }
+            if(j == 5)
+                FLOOR[cur].flag = 0;
+            if(j == 8)
+            {
+                if(i > 2 && i < 6)
+                    FLOOR[cur].flag = 0;
+            }
+            if(j > 8)
+                FLOOR[cur].flag = 0;
+            FLOOR[41].fragile = 0;
+            FLOOR[42].fragile = 0;
+            FLOOR[70].key = 84;FLOOR[84].flag = 0;
+            FLOOR[84].key = 43;FLOOR[43].flag = 0;
+            FLOOR[43].key = 54;FLOOR[54].flag = 0;
+            FLOOR[61].key = 65;FLOOR[65].flag = 0;FLOOR[61].fragile = 0;
+            FLOOR[17].flag = 0;FLOOR[17].goal = 1;
+        }
+    }
+}
+
 void gameOver(int cur)
 {
-    if(cur < 0)
+    if(BLOCK.z < 0 || BLOCK.z > 10*2*TILE_WIDTH || BLOCK.x < 0 || BLOCK.x > 10*2*TILE_WIDTH)
     {
         cout << "GAME OVER: YOU LOSE -> BLOCK FALL DOWN" << endl;
         cout << "MOVES: " << MOVES << endl;
@@ -99,9 +201,25 @@ void gameOver(int cur)
         {
             if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
             {
-                cout << "GAME OVER: YOU WON" << endl;
-                cout << "MOVES: " << MOVES << endl;
-                quit(window);
+                if(LEVEL == 1)
+                {
+                    cout << "GAME OVER: YOU WON" << endl;
+                    cout << "MOVES: " << MOVES << endl;
+                    cout << "LEVEL 2" << endl;
+                    LEVEL++;
+                    restart();
+                    level2();
+                    createRectangle ();
+                    createCam();
+                    createFloor();
+                    createBlock();
+                }
+                else if(LEVEL == 2)
+                {
+                    cout << "GAME OVER: YOU WON" << endl;
+                    cout << "MOVES: " << MOVES << endl;
+                    quit(window);
+                }
             }
         }
         else
@@ -498,8 +616,7 @@ void draw (GLFWwindow* window, float x, float y, float w, float h, int doM, int 
     draw3DObject(BLOCK.block);
 
     //int cur = 10*BLOCK.x+BLOCK.z;
-    int cur = 25;
-
+    int cur;
     if(BLOCK.horizontal_z == 0 && BLOCK.horizontal_x == 0)
     {
         cur = 10*BLOCK.x/(2*BLOCK_WIDTH) + BLOCK.z/(2*BLOCK_WIDTH);
@@ -536,7 +653,7 @@ int main (int argc, char** argv)
 
     int width = 600;
     int height = 600;
-    for(int i=0;i<10;i++)
+    /*for(int i=0;i<10;i++)
     {
         FLOOR[10*i].x = 2*i;
         FLOOR[10*i].y = 0;
@@ -563,9 +680,10 @@ int main (int argc, char** argv)
             FLOOR[cur].key = -INT_MAX;
             FLOOR[cur].fragile = 0;
         }
-    }
+    }*/
+    restart();
     level1();
-    BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
+    /*BLOCK.x = 0; BLOCK.y = 0; BLOCK.z = 0; BLOCK.angle = 0;BLOCK.angle_x = 0;
     BLOCK.axis = glm::vec3(0,1,0);BLOCK.horizontal_z = 0;BLOCK.horizontal_x = 0;
     BLOCK.angle_incr=0;
     if(BLOCK.horizontal_x == 0 && BLOCK.horizontal_z == 0)
@@ -581,7 +699,7 @@ int main (int argc, char** argv)
     {
         BLOCK.y = BLOCK_WIDTH;
         BLOCK.z = BLOCK_WIDTH;
-    }
+    }*/
     /*rect_pos = glm::vec3(0, 0, 0);
     floor_pos = glm::vec3(0, 0, 0);
     do_rot = 0;
@@ -608,6 +726,15 @@ int main (int argc, char** argv)
 	    camera_rotation_angle -= 720;
 	last_update_time = current_time;
 
+    if(DRAG_STATUS == 1)
+    {
+        glfwGetCursorPos(window, &posx, &posy);
+        posx -= 300;
+        posy -= 300;
+        posx = posx*1.0/300.0;
+        posy = -posy*1.0/300.0;
+        target = glm::vec3(posx,posy,0);
+    }
     if(TOWER_VIEW_FLAG)
     {
         eye = TOWER_VIEW_EYE;

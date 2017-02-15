@@ -152,43 +152,54 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,0.1,0);
+    eye += glm::vec3(0,HELI_VIEW_SPEED,0);
+    up = glm::vec3(0,0,1);
+    //up = glm::cross(eye,target);
     //up = eye*target;
     break;
     case 'x':
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,-0.1,0);
+    eye += glm::vec3(0,-HELI_VIEW_SPEED,0);
+    up = glm::vec3(0,0,1);
+    //up = glm::cross(eye,target);
     //up = eye*target;
     break;
     case 'a':
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(-0.1,0,0);
+    eye += glm::vec3(-HELI_VIEW_SPEED,0,0);
+    up = glm::vec3(0,0,1);
+    //up = glm::cross(eye,target);
     //up = eye*target;
     break;
     case 'd':
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0.1,0,0);
+    eye += glm::vec3(HELI_VIEW_SPEED,0,0);
+    up = glm::vec3(0,0,1);
     //up = eye*target;
+    //up = glm::cross(eye,target);
     break;
     case 's':
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,0,0.1);
+    eye += glm::vec3(0,0,HELI_VIEW_SPEED);
+    up = glm::vec3(0,0,1);
     //up = eye*target;
+    //up = glm::cross(eye,target);
     break;
     case 'z':
     TOWER_VIEW_FLAG = 0;
     FOLLOW_VIEW_FLAG = 0;
     BLOCK_VIEW_FLAG = 0;
-    eye += glm::vec3(0,0,-0.1);
-    //up = eye*target;
+    eye += glm::vec3(0,0,-HELI_VIEW_SPEED);
+    up = glm::vec3(0,0,1);
+    //up = glm::cross(eye,target);
     break;
     default:
 	break;
@@ -199,11 +210,21 @@ void keyboardChar (GLFWwindow* window, unsigned int key)
 void mouseButton (GLFWwindow* window, int button, int action, int mods)
 {
     switch (button) {
-    case GLFW_MOUSE_BUTTON_RIGHT:
-	if (action == GLFW_RELEASE) {
-	    rectangle_rot_dir *= -1;
+    case GLFW_MOUSE_BUTTON_LEFT:
+	if (action == GLFW_PRESS) 
+    {
+        //cout << " X : " << posx << " Y : " << posy << endl;
+        DRAG_STATUS = 1;
+        TOWER_VIEW_FLAG = 0;
+        BLOCK_VIEW_FLAG = 0;
+        FOLLOW_VIEW_FLAG = 0;
 	}
 	break;
+    if (action == GLFW_RELEASE) 
+    {
+        DRAG_STATUS = 0;
+	}
+    break;
     default:
 	break;
     }

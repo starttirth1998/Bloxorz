@@ -59,8 +59,14 @@ void quit(GLFWwindow *window);
 GLFWwindow* initGLFW (int width, int height);
 void initGL (GLFWwindow* window, int width, int height);
 void level1();
+void level2();
 void gameOver();
 void restart();
+void createCam();
+void createFloor();
+void createRectangle();
+void createBlock();
+
 
 GLuint LoadShaders(const char * vertex_file_path,const char * fragment_file_path);
 struct VAO* create3DObject (GLenum primitive_mode, int numVertices, const GLfloat* vertex_buffer_data, const GLfloat* color_buffer_data, GLenum fill_mode);
@@ -92,9 +98,13 @@ glm::vec3 TOWER_VIEW_EYE = glm::vec3(-3, 14, -2);
 glm::vec3 TOWER_VIEW_TARGET = glm::vec3(8,0,8); 
 glm::vec3 TOWER_VIEW_UP = glm::vec3(1,3,1);
 
+//glm::vec3 TOWER_VIEW_UP = glm::cross(TOWER_VIEW_EYE,TOWER_VIEW_TARGET);
+
 glm::vec3 TOP_VIEW_EYE = glm::vec3(9,15,4); 
 glm::vec3 TOP_VIEW_TARGET = glm::vec3(9,0,4); 
 glm::vec3 TOP_VIEW_UP = glm::vec3(1,0,1);
+
+//glm::vec3 TOP_VIEW_UP = glm::cross(TOP_VIEW_EYE,TOP_VIEW_TARGET);
 
 int FOLLOW_VIEW_FLAG = 0;
 int BLOCK_VIEW_FLAG = 0;
@@ -106,4 +116,10 @@ float ROTATION_SPEED = 10.0f;
 
 GLFWwindow* window;
 
+int LEVEL = 1;
 int MOVES = 0;
+float HELI_VIEW_SPEED = 0.3f;
+
+double posx = 0.0;
+double posy = 0.0;
+int DRAG_STATUS = 0;
