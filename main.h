@@ -112,7 +112,7 @@ int TOWER_VIEW_FLAG = 1;
 int FLAG_LEFT = 0;
 int FLAG_DOWN = 0;
 
-float ROTATION_SPEED = 6.0f;
+float ROTATION_SPEED = 7.0f;
 
 GLFWwindow* window;
 
